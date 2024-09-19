@@ -13,6 +13,8 @@ function App() {
     setNegativeCount(-count);
   }, [count]);
 
+  let name = "John";
+
   return (
     <div>
       <h1>React App</h1>
