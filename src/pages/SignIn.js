@@ -1,6 +1,5 @@
-import React from "react";
+import React, {useState} from "react";
 import {
-  Box,
   Container,
   Button,
   TextField,
@@ -10,6 +9,19 @@ import {
 import GoogleIcon from "@mui/icons-material/Google";
 
 function SignIn() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSignInEmailPassword = () => {
+    // TODO
+    console.log("Signing in with", email, password);
+  };
+
+  const handleSignInWithGoogle = () => {
+    // TODO
+    console.log("Signing in with Google");
+  }
+
   return (
     <Container
       maxWidth="xs"
@@ -22,19 +34,21 @@ function SignIn() {
         }}
     >
       <Typography variant="h4">Sign In</Typography>
-      <TextField sx={{ mt: 4 }} fullWidth variant="outlined" label="Email" type="email" />
+      <TextField value={email} onChange={(e) => setEmail(e.target.value)} sx={{ mt: 4 }} fullWidth variant="outlined" label="Email" type="email" />
       <TextField
         fullWidth
         variant="outlined"
         label="Password"
         type="password"
-        sx={{ mt: 1 }} 
+        sx={{ mt: 1 }}
+        value={password}
+        onChange={(e) => setPassword(e.target.value)} 
       />
-      <Button sx={{ mt: 1 }} fullWidth variant="contained">
+      <Button onClick={handleSignInEmailPassword} sx={{ mt: 1 }} fullWidth variant="contained">
         Sign In
       </Button>
 
-      <Fab sx={{ mt: 2 }} variant="extended">
+      <Fab onClick={handleSignInWithGoogle} sx={{ mt: 2 }} variant="extended">
         <GoogleIcon sx={{ mr: 1 }} />
         Continue with Google
       </Fab>
