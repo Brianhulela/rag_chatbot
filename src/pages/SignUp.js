@@ -12,21 +12,21 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 import { signOut } from "firebase/auth"; // Import the signOut function
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 
-function SignIn() {
+function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
 
-  const handleSignInEmailPassword = async () => {
+  const handleSignUpEmailPassword = async () => {
     try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        console.log('User signed in:', userCredential.user);
-      } catch (error) {
-        console.error(error.message);
-      }
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      console.log('User created:', userCredential.user);
+    } catch (error) {
+      console.error(error.message);
+    }
   };
 
   const handleSignInWithGoogle = async () => {
@@ -69,13 +69,13 @@ function SignIn() {
         height: "100vh",
       }}
     >
-        <Typography variant="body1">Signed in as: {user && user.email}</Typography>
+        <Typography variant="body1">Signed in as: {user && user.displayName}</Typography>
       <Avatar
-        alt={user?.email && user.email}
+        alt={user?.displayName && user.displayName}
         src={user?.photoURL && user.photoURL}
         sx={{ width: 24, height: 24 }}
       />
-      <Typography variant="h4">Sign In</Typography>
+      <Typography variant="h4">Sign Up</Typography>
       <TextField
         value={email}
         onChange={(e) => setEmail(e.target.value)}
@@ -95,12 +95,12 @@ function SignIn() {
         onChange={(e) => setPassword(e.target.value)}
       />
       <Button
-        onClick={handleSignInEmailPassword}
+        onClick={handleSignUpEmailPassword}
         sx={{ mt: 1 }}
         fullWidth
         variant="contained"
       >
-        Sign In
+        Sign Up
       </Button>
 
       <Fab onClick={handleSignInWithGoogle} sx={{ mt: 2 }} variant="extended">
@@ -114,4 +114,4 @@ function SignIn() {
   );
 }
 
-export default SignIn;
+export default SignUp;
