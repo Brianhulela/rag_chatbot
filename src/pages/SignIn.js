@@ -7,19 +7,27 @@ import {
   Fab,
 } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth } from "../firebaseConfig";
 
 function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [user, setUser] = useState(null);
 
   const handleSignInEmailPassword = () => {
     // TODO
     console.log("Signing in with", email, password);
   };
 
-  const handleSignInWithGoogle = () => {
-    // TODO
-    console.log("Signing in with Google");
+  const handleSignInWithGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      setUser(result.user);
+    } catch (error) {
+      console.error('Error during Google Sign-In:', error);
+    }
   }
 
   return (
