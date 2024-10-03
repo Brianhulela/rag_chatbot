@@ -5,6 +5,7 @@ import {
   onSnapshot,
   updateDoc,
   doc,
+  deleteDoc
 } from "firebase/firestore";
 
 // Create new chat in firestore
@@ -39,5 +40,16 @@ export const updateChat = async (chatId, updatedFields) => {
         console.log("Document updated with ID: ", chatId);
     } catch (e) {
         console.error("Error updating document: ", e);
+    }
+};
+
+// Delete a chat document from Firestore
+export const deleteChat = async (chatId) => {
+    try {
+        const chatRef = doc(db, "Chats", chatId); // Reference to the specific document
+        await deleteDoc(chatRef); // Delete the document
+        console.log("Document deleted with ID: ", chatId);
+    } catch (e) {
+        console.error("Error deleting document: ", e);
     }
 };

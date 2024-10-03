@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { addChat, subscribeToChats, updateChat } from "../firebase/Database";
+import { addChat, subscribeToChats, updateChat, deleteChat } from "../firebase/Database";
 import { Button, Container, List, ListItem, ListItemText } from "@mui/material";
 import useAuth from "../firebase/useAuth";
 import { Timestamp } from "firebase/firestore";
@@ -30,6 +30,11 @@ function Chat() {
     await updateChat(chatId, updatedFields);
   };
 
+  // Function to handle deleting a chat
+  const handleDeleteChat = async (chatId) => {
+    await deleteChat(chatId); // Call the deleteChat function to delete the document
+  };
+
    // Use useEffect to subscribe to real-time chat updates
    useEffect(() => {
     const unsubscribe = subscribeToChats((fetchedChats) => {
@@ -56,6 +61,9 @@ function Chat() {
             {/* Button to update a chat */}
             <Button onClick={() => handleUpdateChat(chat.id)} variant="outlined">
               Update Chat
+            </Button>
+            <Button onClick={() => handleDeleteChat(chat.id)} variant="contained" color="error">
+              Delete Chat
             </Button>
           </ListItem>
         ))}
