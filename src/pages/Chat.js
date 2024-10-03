@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { addChat, subscribeToChats } from "../firebase/Database";
+import { addChat, subscribeToChats, updateChat } from "../firebase/Database";
 import { Button, Container, List, ListItem, ListItemText } from "@mui/material";
 import useAuth from "../firebase/useAuth";
 import { Timestamp } from "firebase/firestore";
@@ -19,6 +19,15 @@ function Chat() {
       };
       await addChat(testChat);
     }
+  };
+
+  // Function to handle updating a chat
+  const handleUpdateChat = async (chatId) => {
+    const updatedFields = {
+      title: "Updated Chat Title", // For example, updating the chat title
+      updatedAt: Timestamp.now(),  // Updating the timestamp as well
+    };
+    await updateChat(chatId, updatedFields);
   };
 
    // Use useEffect to subscribe to real-time chat updates
@@ -42,8 +51,12 @@ function Chat() {
           <ListItem key={chat.id}>
             <ListItemText
               primary={chat.title}
-              secondary={`Created At: ${chat.createdAt}`}
+              secondary={`Created At: ${chat.createdAt.toDate().toLocaleString()}`}
             />
+            {/* Button to update a chat */}
+            <Button onClick={() => handleUpdateChat(chat.id)} variant="outlined">
+              Update Chat
+            </Button>
           </ListItem>
         ))}
       </List>
