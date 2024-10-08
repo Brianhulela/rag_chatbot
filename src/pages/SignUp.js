@@ -10,15 +10,14 @@ import {
 import GoogleIcon from "@mui/icons-material/Google";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../firebaseConfig";
-import { onAuthStateChanged } from "firebase/auth";
 import { signOut } from "firebase/auth"; // Import the signOut function
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-
+import useAuth from "../firebase/useAuth";
 
 function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
+  const {user} = useAuth();
 
   const handleSignUpEmailPassword = async () => {
     try {
@@ -33,21 +32,10 @@ function SignUp() {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      setUser(result.user);
     } catch (error) {
       console.error("Error during Google Sign-In:", error);
     }
   };
-
-  useEffect(() => {
-    // Observe the authentication status
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser); // Update the user state
-    });
-
-    // Cleanup the subscription on unmount
-    return () => unsubscribe();
-  }, []);
 
   const handleSignOut = async () => {
     try {
