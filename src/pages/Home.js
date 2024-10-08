@@ -1,10 +1,21 @@
 import { Box, Button, TextField, Typography, Grid, List, ListItem, ListItemText } from '@mui/material';
 import React from 'react';
+import axios from 'axios';
 
 function Home() {
   
   const chatHistory = [{id: 1, message: 'Mlungisi October 4 Topic'},
     {id: 2, message: 'Mlungisi November 4 Topic'},];
+
+    const handleSend = async () => {
+      try {
+        const response = await axios.get('https://n3onmofdlo6lahewjz7yrabhsm0rpfij.lambda-url.us-east-1.on.aws/');
+    
+        console.log(response.data);
+      } catch (error) {
+        console.error('CORS Error or another issue:', error);
+      }
+    };
 
   return (
     <Grid container spacing={2}>
@@ -56,6 +67,7 @@ function Home() {
             <Button
               variant="contained"
               sx={{minHeight:'56px', width: "25%"}}
+              onClick={handleSend}
             >
               Send
             </Button>
