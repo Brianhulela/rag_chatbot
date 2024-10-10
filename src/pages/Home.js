@@ -1,8 +1,9 @@
 import { Box, Button, TextField, Typography, Grid, List, ListItem, ListItemText } from '@mui/material';
-import React from 'react';
+import React, {useState} from 'react';
 import axios from 'axios';
 
 function Home() {
+  const [response, setResponse] = useState('');
   
   const chatHistory = [{id: 1, message: 'Mlungisi October 4 Topic'},
     {id: 2, message: 'Mlungisi November 4 Topic'},];
@@ -10,7 +11,7 @@ function Home() {
     const handleSend = async () => {
       try {
         const response = await axios.get('https://p37ydcmuafkhbmbmmck2x4cawm0bmxpz.lambda-url.us-east-1.on.aws/');
-        console.log(response.data);
+        setResponse(response.data);
       } catch (error) {
         console.error('CORS Error or another issue:', error);
       }
@@ -52,7 +53,7 @@ function Home() {
           sx={{ mt: 45}}
         >
           <Typography variant="h5" sx={{mb: 2}}>
-            Hello, What's Up
+            {response === '' ? 'Hello, What\'s Up' : response}
           </Typography>
 
           <Box display="flex" flexDirection="row" alignItems="center" sx={{maxWidth: 500, width: '100%'}}>
