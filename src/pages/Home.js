@@ -9,8 +9,7 @@ function Home() {
 
     const handleSend = async () => {
       try {
-        const response = await axios.get('https://n3onmofdlo6lahewjz7yrabhsm0rpfij.lambda-url.us-east-1.on.aws/');
-    
+        const response = await axios.get('https://p37ydcmuafkhbmbmmck2x4cawm0bmxpz.lambda-url.us-east-1.on.aws/');
         console.log(response.data);
       } catch (error) {
         console.error('CORS Error or another issue:', error);
