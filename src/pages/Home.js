@@ -4,13 +4,19 @@ import axios from 'axios';
 
 function Home() {
   const [response, setResponse] = useState('');
+  const [input, setInput] = useState('');
   
   const chatHistory = [{id: 1, message: 'Mlungisi October 4 Topic'},
     {id: 2, message: 'Mlungisi November 4 Topic'},];
 
     const handleSend = async () => {
       try {
-        const response = await axios.get('https://p37ydcmuafkhbmbmmck2x4cawm0bmxpz.lambda-url.us-east-1.on.aws/');
+        if (input.trim() === '') {
+          return; // Ignore empty input
+        } 
+
+        const encodeInput = encodeURIComponent(input);
+        const response = await axios.get(`https://p37ydcmuafkhbmbmmck2x4cawm0bmxpz.lambda-url.us-east-1.on.aws/?query=${input}`);
         setResponse(response.data);
       } catch (error) {
         console.error('CORS Error or another issue:', error);
@@ -62,6 +68,8 @@ function Home() {
               variant="outlined"
               fullWidth
               sx={{mr: 1}}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
             />
 
             <Button
