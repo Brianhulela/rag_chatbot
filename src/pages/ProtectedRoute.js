@@ -3,7 +3,12 @@ import { Navigate } from "react-router-dom";
 import useAuth from "../firebase/useAuth";
 
 const ProtectedRoute = ({ children }) => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    // While checking if the user is authenticated, you can return a loading indicator
+    return <div>Loading...</div>; // You can use a better loader/spinner here
+  }
 
   if (!user) {
     // If no user is authenticated, redirect to the sign-in page
