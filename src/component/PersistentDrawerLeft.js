@@ -1,31 +1,51 @@
-import {
-  Box,
-  Button,
-  TextField,
-  Typography,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-} from "@mui/material";
-import React, { useState } from "react";
-import axios from "axios";
-import ReactMarkdown from "react-markdown";
-import PersistentDrawerLeft from "../component/PersistentDrawerLeft";
+import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
+import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
+import List from '@mui/material/List';
+import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
+import ResponsiveAppBar from './ResponsiveAppBar';
+
+const drawerWidth = 240;
+
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
+  ({ theme }) => ({
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: `-${drawerWidth}px`,
+    variants: [
+      {
+        props: ({ open }) => open,
+        style: {
+          transition: theme.transitions.create('margin', {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+          }),
+          marginLeft: 0,
+        },
+      },
+    ],
+  }),
+);
+
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -35,14 +55,9 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
-const drawerWidth = 240;
-
-function Home() {
-  const [response, setResponse] = useState("");
-  const [input, setInput] = useState("");
-
-  const [open, setOpen] = React.useState(true);
+export default function PersistentDrawerLeft() {
   const theme = useTheme();
+  const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -52,29 +67,9 @@ function Home() {
     setOpen(false);
   };
 
-  const chatHistory = [
-    { id: 1, message: "Mlungisi October 4 Topic" },
-    { id: 2, message: "Mlungisi November 4 Topic" },
-  ];
-
-  const handleSend = async () => {
-    try {
-      if (input.trim() === "") {
-        return; // Ignore empty input
-      }
-
-      const encodeInput = encodeURIComponent(input);
-      const response = await axios.get(
-        `https://p37ydcmuafkhbmbmmck2x4cawm0bmxpz.lambda-url.us-east-1.on.aws/?query=${input}`
-      );
-      setResponse(response.data);
-    } catch (error) {
-      console.error("CORS Error or another issue:", error);
-    }
-  };
-
   return (
-    <Box>
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
       <Drawer
         sx={{
           width: drawerWidth,
@@ -120,51 +115,12 @@ function Home() {
           ))}
         </List>
       </Drawer>
+      <ResponsiveAppBar open={open} handleDrawerOpen={handleDrawerOpen}/>
 
-      {/* Right side - Main Chat Interface */}
-      <Grid item xs={8}>
-        <Box
-          display="flex"
-          justifyContent="center"
-          flexDirection="column"
-          alignItems="center"
-          sx={{ mt: 45 }}
-        >
-          {response === "" ? (
-            <Typography variant="h5" sx={{ mb: 2 }}>
-              Hello, What's Up
-            </Typography>
-          ) : (
-            <ReactMarkdown>{response}</ReactMarkdown>
-          )}
-
-          <Box
-            display="flex"
-            flexDirection="row"
-            alignItems="center"
-            sx={{ maxWidth: 500, width: "100%" }}
-          >
-            <TextField
-              label="Comment or Ask Anything"
-              variant="outlined"
-              fullWidth
-              sx={{ mr: 1 }}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-            />
-
-            <Button
-              variant="contained"
-              sx={{ minHeight: "56px", width: "25%" }}
-              onClick={handleSend}
-            >
-              Send
-            </Button>
-          </Box>
-        </Box>
-      </Grid>
+      <Main open={open}>
+        <DrawerHeader />
+        
+      </Main>
     </Box>
   );
 }
-
-export default Home;

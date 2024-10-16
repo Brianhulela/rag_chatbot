@@ -6,13 +6,13 @@ import Chat from "./pages/Chat";
 import Home from "./pages/Home";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import ResponsiveAppBar from "./component/ResponsiveAppBar";
+import PersistentDrawerLeft from "./component/PersistentDrawerLeft";
 
 function App() {
   return (
     <Router>
       <div>
         <ResponsiveAppBar/>
-        {/* Define the routes for different pages */}
         <Routes>
           {/* Protect the Home page */}
           <Route
