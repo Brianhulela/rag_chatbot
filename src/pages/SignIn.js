@@ -13,16 +13,18 @@ import { auth } from "../firebaseConfig";
 import { signOut } from "firebase/auth"; // Import the signOut function
 import { signInWithEmailAndPassword } from "firebase/auth";
 import useAuth from "../firebase/useAuth";
+import { useNavigate } from "react-router-dom";
 
 function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const {user} = useAuth()
+  const navigate = useNavigate();
 
   const handleSignInEmailPassword = async () => {
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        console.log('User signed in:', userCredential.user);
+        navigate("/")
       } catch (error) {
         console.error(error.message);
       }
@@ -32,6 +34,7 @@ function SignIn() {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
+      navigate("/")
     } catch (error) {
       console.error("Error during Google Sign-In:", error);
     }
