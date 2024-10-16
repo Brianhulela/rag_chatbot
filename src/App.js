@@ -5,11 +5,13 @@ import SignUp from "./pages/SignUp";
 import Chat from "./pages/Chat";
 import Home from "./pages/Home";
 import ProtectedRoute from "./pages/ProtectedRoute";
+import ResponsiveAppBar from "./component/ResponsiveAppBar";
 
 function App() {
   return (
     <Router>
       <div>
+        <ResponsiveAppBar/>
         {/* Define the routes for different pages */}
         <Routes>
           {/* Protect the Home page */}
