@@ -5,7 +5,6 @@ import SignUp from "./pages/SignUp";
 import Chat from "./pages/Chat";
 import Home from "./pages/Home";
 import ProtectedRoute from "./pages/ProtectedRoute";
-import ResponsiveAppBar from "./component/ResponsiveAppBar";
 import { ThemeContextProvider } from "./contexts/ThemeContext";
 
 function App() {
@@ -13,7 +12,6 @@ function App() {
     <ThemeContextProvider>
       <Router>
         <div>
-          <ResponsiveAppBar />
           <Routes>
             {/* Protect the Home page */}
             <Route
