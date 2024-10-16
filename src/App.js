@@ -4,6 +4,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Chat from "./pages/Chat";
 import Home from "./pages/Home";
+import ProtectedRoute from "./pages/ProtectedRoute";
 
 function App() {
   return (
@@ -11,10 +12,28 @@ function App() {
       <div>
         {/* Define the routes for different pages */}
         <Routes>
-          <Route path="/" element={<Home />} />
+          {/* Protect the Home page */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Protect the Chat page */}
+          <Route
+            path="/chat"
+            element={
+              <ProtectedRoute>
+                <Chat />
+              </ProtectedRoute>
+            }
+          />
+
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/chat" element={<Chat />} />
         </Routes>
       </div>
     </Router>
