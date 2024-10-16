@@ -7,32 +7,36 @@ import {
   List,
   ListItem,
   ListItemText,
+  Container,
+  Fab,
 } from "@mui/material";
 import React, { useState } from "react";
 import axios from "axios";
-import ReactMarkdown from "react-markdown";
 import PersistentDrawerLeft from "../component/PersistentDrawerLeft";
-import { styled, useTheme } from '@mui/material/styles';
-import Drawer from '@mui/material/Drawer';
-import CssBaseline from '@mui/material/CssBaseline';
-import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-const DrawerHeader = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
+import { styled, useTheme } from "@mui/material/styles";
+import Drawer from "@mui/material/Drawer";
+import CssBaseline from "@mui/material/CssBaseline";
+import MuiAppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import InboxIcon from "@mui/icons-material/MoveToInbox";
+import MailIcon from "@mui/icons-material/Mail";
+import Messages from "../component/Messages";
+import SendRoundedIcon from '@mui/icons-material/SendRounded';
+
+const DrawerHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
   padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
-  justifyContent: 'flex-end',
+  justifyContent: "flex-end",
 }));
 
 const drawerWidth = 240;
@@ -79,9 +83,9 @@ function Home() {
         sx={{
           width: drawerWidth,
           flexShrink: 0,
-          '& .MuiDrawer-paper': {
+          "& .MuiDrawer-paper": {
             width: drawerWidth,
-            boxSizing: 'border-box',
+            boxSizing: "border-box",
           },
         }}
         variant="persistent"
@@ -90,12 +94,16 @@ function Home() {
       >
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            {theme.direction === "ltr" ? (
+              <ChevronLeftIcon />
+            ) : (
+              <ChevronRightIcon />
+            )}
           </IconButton>
         </DrawerHeader>
         <Divider />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+          {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
             <ListItem key={text} disablePadding>
               <ListItemButton>
                 <ListItemIcon>
@@ -108,7 +116,7 @@ function Home() {
         </List>
         <Divider />
         <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
+          {["All mail", "Trash", "Spam"].map((text, index) => (
             <ListItem key={text} disablePadding>
               <ListItemButton>
                 <ListItemIcon>
@@ -122,47 +130,34 @@ function Home() {
       </Drawer>
 
       {/* Right side - Main Chat Interface */}
-      <Grid item xs={8}>
+      <Container maxWidth="md">
+        <Messages response={response} />
+
         <Box
-          display="flex"
-          justifyContent="center"
-          flexDirection="column"
-          alignItems="center"
-          sx={{ mt: 45 }}
+          sx={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            mb: 2,
+          }}
         >
-          {response === "" ? (
-            <Typography variant="h5" sx={{ mb: 2 }}>
-              Hello, What's Up
-            </Typography>
-          ) : (
-            <ReactMarkdown>{response}</ReactMarkdown>
-          )}
+          <TextField
+            label="Message"
+            variant="outlined"
+            fullWidth
+            maxWidth="lg"
+            sx={{ mr: 1 }}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+          />
 
-          <Box
-            display="flex"
-            flexDirection="row"
-            alignItems="center"
-            sx={{ maxWidth: 500, width: "100%" }}
-          >
-            <TextField
-              label="Comment or Ask Anything"
-              variant="outlined"
-              fullWidth
-              sx={{ mr: 1 }}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-            />
-
-            <Button
-              variant="contained"
-              sx={{ minHeight: "56px", width: "25%" }}
-              onClick={handleSend}
-            >
-              Send
-            </Button>
-          </Box>
+          <Fab color="info" variant="extended" onClick={handleSend}>
+            <SendRoundedIcon sx={{ mr: 1 }} />
+            Send
+          </Fab>
         </Box>
-      </Grid>
+      </Container>
     </Box>
   );
 }
