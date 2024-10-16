@@ -4,7 +4,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import HomeMainContent from "../component/HomeMainContent";
 import HomeAppBar from "../component/HomeAppBar";
 import HomeDrawer from "../component/HomeDrawer";
-import { drawerWidth } from "../constants/DrawerConstants";
 
 export default function Home() {
   const [open, setOpen] = React.useState(false);

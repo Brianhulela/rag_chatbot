@@ -1,9 +1,8 @@
 import React from "react";
 import { Typography } from "@mui/material";
 import HomeDrawerHeader from "./HomeDrawerHeader";
-import { styled, useTheme } from "@mui/material/styles";
-
-const drawerWidth = 240;
+import { styled } from "@mui/material/styles";
+import { drawerWidth } from "../constants/DrawerConstants";
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme }) => ({
