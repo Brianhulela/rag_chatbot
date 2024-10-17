@@ -2,9 +2,11 @@ import { TextField, Box, Fab, Container, Typography } from "@mui/material";
 import React, {useState} from "react";
 import { drawerWidth } from "../constants/DrawerConstants";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
+import { useTheme } from "@emotion/react";
 
 function QueryInput({ open, sendUserQuery}) {
     const [input, setInput] = useState("");
+    const theme = useTheme();
 
     const handleSend = () => {
         // Handle send logic here
@@ -26,6 +28,7 @@ function QueryInput({ open, sendUserQuery}) {
         right: 0,
         width: open ? `calc(100% - ${drawerWidth}px)` : "100%", // Adjust width based on drawer state
         zIndex: 1000, // Ensure it's above other content
+        backgroundColor: (theme) => theme.palette.background.default,
       }}
     >
       <Box sx={{ display: "flex", width: "100%", alignItems: "center" }}>

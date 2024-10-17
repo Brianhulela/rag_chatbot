@@ -5,7 +5,7 @@ import Response from './Response'
 
 function Messages({response}) {
   return (
-    <Box>
+    <Box sx={{pb: "100px"}}>
         <Query/>
         <Response response={response}/>
     </Box>
