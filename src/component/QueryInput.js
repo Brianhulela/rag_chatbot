@@ -1,9 +1,17 @@
 import { TextField, Box, Fab, Container, Typography } from "@mui/material";
-import React from "react";
+import React, {useState} from "react";
 import { drawerWidth } from "../constants/DrawerConstants";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 
-function QueryInput({ open }) {
+function QueryInput({ open, sendUserQuery}) {
+    const [input, setInput] = useState("");
+
+    const handleSend = () => {
+        // Handle send logic here
+        sendUserQuery(input);
+        setInput(""); // Clear input after send
+      };
+
   return (
     <Container
       maxWidth="md"
@@ -25,6 +33,8 @@ function QueryInput({ open }) {
           fullWidth
           label="Message"
           variant="filled"
+          value={input}
+        onChange={(e) => setInput(e.target.value)}
           multiline
           maxRows={5}
           slotProps={{
@@ -41,7 +51,7 @@ function QueryInput({ open }) {
             backgroundColor: "background.paper", // Adjust background color to match theme
           }}
         ></TextField>
-        <Fab sx={{ ml: 2 }} variant="extended" color="primary">
+        <Fab sx={{ ml: 2 }} variant="extended" color="primary" onClick={handleSend}>
           <SendRoundedIcon sx={{ mr: 1 }} />
           Send
         </Fab>
