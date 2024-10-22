@@ -58,3 +58,13 @@ export const deleteChat = async (chatId) => {
         console.error("Error deleting document: ", e);
     }
 };
+
+// Add message to messages collection in Firestore
+export const addMessage = async (message) => {
+    try {
+        const docRef = await addDoc(collection(db, "Messages"), message);
+        console.log("Message written with ID: ", docRef.id);
+    } catch (e) {
+        console.error("Error adding message: ", e);
+    }
+};

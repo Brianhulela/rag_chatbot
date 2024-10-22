@@ -42,7 +42,7 @@ export default function Home() {
         chats={chats}
         setSelectedChat={setSelectedChat}
       />
-      <HomeMainContent open={open} />
+      <HomeMainContent selectedChat={selectedChat} open={open} />
     </Box>
   );
 }

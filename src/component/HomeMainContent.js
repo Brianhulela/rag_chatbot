@@ -6,6 +6,9 @@ import { drawerWidth } from "../constants/DrawerConstants";
 import Messages from "./Messages";
 import QueryInput from "./QueryInput";
 import axios from "axios";
+import { addMessage } from "../firebase/Database";
+import useAuth from "../firebase/useAuth";
+import { Timestamp } from "firebase/firestore";
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme }) => ({
@@ -31,8 +34,9 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   })
 );
 
-function HomeMainContent({ open }) {
+function HomeMainContent({ open, selectedChat }) {
   const [response, setResponse] = useState("");
+  const { user } = useAuth();
 
   const chatHistory = [
     { id: 1, message: "Mlungisi October 4 Topic" },
@@ -45,13 +49,34 @@ function HomeMainContent({ open }) {
         return; // Ignore empty input
       }
 
-      // Add user message to database
+      if (user && selectedChat){
+        // Add user message to database
+        const userMessage = {
+          chatId: selectedChat.id,
+          uid: user.uid,
+          text: input,
+          createdAt: Timestamp.now(),
+          sender: "USER"
+        }
 
-      const encodeInput = encodeURIComponent(input);
-      const response = await axios.get(
-        `https://p37ydcmuafkhbmbmmck2x4cawm0bmxpz.lambda-url.us-east-1.on.aws/?query=${input}`
-      );
-      setResponse(response.data);
+        addMessage(userMessage);
+
+        const encodeInput = encodeURIComponent(input);
+        const response = await axios.get(
+          `https://p37ydcmuafkhbmbmmck2x4cawm0bmxpz.lambda-url.us-east-1.on.aws/?query=${input}`
+        );
+        setResponse(response.data);
+
+        const aiMessage = {
+          chatId: selectedChat.id,
+          uid: user.uid,
+          text: response.data,
+          createdAt: Timestamp.now(),
+          sender: "AI"
+        }
+
+        addMessage(aiMessage);
+      }
 
       // Add AI respose to database
     } catch (error) {
