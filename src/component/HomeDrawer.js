@@ -15,9 +15,27 @@ import { drawerWidth } from "../constants/DrawerConstants";
 import { useTheme } from "@mui/material/styles";
 import HomeDrawerHeader from "./HomeDrawerHeader";
 import AddIcon from '@mui/icons-material/Add';
+import { addChat } from "../firebase/Database";
+import useAuth from "../firebase/useAuth";
+import { Timestamp } from "firebase/firestore";
 
 function HomeDrawer({ open, handleDrawerClose }) {
   const theme = useTheme();
+  const { user } = useAuth();
+
+  const handleAddChat = () => {
+    if (user) {
+      const newChat = {
+        // Make title string current time in format 23 may 2024
+        title: Timestamp.now(),
+        uid: user.uid,
+        createdAt: Timestamp.now(),  // Firestore's current timestamp
+        updatedAt: Timestamp.now(),  // Use the same timestamp for both initially
+      };
+      addChat(newChat);
+    }
+  };
+
   return (
     <Drawer
       sx={{
@@ -33,7 +51,7 @@ function HomeDrawer({ open, handleDrawerClose }) {
       open={open}
     >
       <HomeDrawerHeader>
-        <Fab variant="extended" size="small">
+        <Fab onClick={handleAddChat} variant="extended" size="small">
           <AddIcon sx={{ mr: 1 }} />
           New Chat
         </Fab>
