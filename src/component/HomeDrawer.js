@@ -4,19 +4,17 @@ import {
   IconButton,
   ListItem,
   ListItemButton,
-  ListItemIcon,
   List,
   Drawer,
-  Typography,
+  Fab,
 } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 import { drawerWidth } from "../constants/DrawerConstants";
 import { useTheme } from "@mui/material/styles";
 import HomeDrawerHeader from "./HomeDrawerHeader";
+import AddIcon from '@mui/icons-material/Add';
 
 function HomeDrawer({ open, handleDrawerClose }) {
   const theme = useTheme();
@@ -35,6 +33,10 @@ function HomeDrawer({ open, handleDrawerClose }) {
       open={open}
     >
       <HomeDrawerHeader>
+        <Fab variant="extended" size="small">
+          <AddIcon sx={{ mr: 1 }} />
+          New Chat
+        </Fab>
         <IconButton onClick={handleDrawerClose}>
           {theme.direction === "ltr" ? (
             <ChevronLeftIcon />
