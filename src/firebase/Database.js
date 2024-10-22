@@ -7,7 +7,8 @@ import {
   doc,
   deleteDoc,
   query,
-  where
+  where,
+  orderBy
 } from "firebase/firestore";
 
 // Create new chat in firestore
@@ -59,7 +60,7 @@ export const deleteChat = async (chatId) => {
     }
 };
 
-// Add message to messages collection in Firestore
+// Add message to messages collection in Firestore (Create)
 export const addMessage = async (message) => {
     try {
         const docRef = await addDoc(collection(db, "Messages"), message);
@@ -67,4 +68,25 @@ export const addMessage = async (message) => {
     } catch (e) {
         console.error("Error adding message: ", e);
     }
+};
+
+// onSnapShot subscriber to messages by id
+export const subscribeToMessages = (chatId, callback) => {
+    const messagesCollectionRef = collection(db, "Messages");
+
+    // Create a query to filter messages by the chatId
+    const messagesQuery = query(
+      messagesCollectionRef, 
+      where("chatId", "==", chatId),
+      orderBy("createdAt", "asc") // Sort by createdAt in ascending order
+    );
+
+    // Use onSnapshot to listen for updates in real-time for the filtered messages
+    return onSnapshot(messagesQuery, (snapshot) => {
+        const messages = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+        }));
+        callback(messages); // Invoke the callback with the filtered messages data
+    });
 };

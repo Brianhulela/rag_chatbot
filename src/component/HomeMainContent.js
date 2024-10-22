@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { Container } from "@mui/material";
 import HomeDrawerHeader from "./HomeDrawerHeader";
 import { styled } from "@mui/material/styles";
@@ -6,7 +6,7 @@ import { drawerWidth } from "../constants/DrawerConstants";
 import Messages from "./Messages";
 import QueryInput from "./QueryInput";
 import axios from "axios";
-import { addMessage } from "../firebase/Database";
+import { addMessage, subscribeToMessages } from "../firebase/Database";
 import useAuth from "../firebase/useAuth";
 import { Timestamp } from "firebase/firestore";
 
@@ -36,12 +36,18 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
 
 function HomeMainContent({ open, selectedChat }) {
   const [response, setResponse] = useState("");
+
+  const [messages, setMessages] = useState([]);
   const { user } = useAuth();
 
-  const chatHistory = [
-    { id: 1, message: "Mlungisi October 4 Topic" },
-    { id: 2, message: "Mlungisi November 4 Topic" },
-  ];
+  useEffect(() => {
+    if (user && selectedChat) {
+      const unsubscribe = subscribeToMessages(selectedChat.id, (messages) => {
+        setMessages(messages);
+      });
+      return () => unsubscribe();
+    }
+  }, [user, selectedChat]);
 
   const sendUserQuery = async (input) => {
     try {
@@ -88,7 +94,7 @@ function HomeMainContent({ open, selectedChat }) {
     <Main open={open}>
       <HomeDrawerHeader />
       <Container maxWidth="md" sx={{height: "100%", alignItems: "flex-end"}}>
-        <Messages response={response}/>
+        <Messages messages={messages} response={response}/>
         <QueryInput open={open} sendUserQuery={sendUserQuery}/>
       </Container>
     </Main>

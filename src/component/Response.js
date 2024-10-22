@@ -2,9 +2,9 @@ import React from 'react'
 import ReactMarkdown from "react-markdown";
 
 
-function Response({response}) {
+function Response({message}) {
   return (
-    <ReactMarkdown>{response}</ReactMarkdown>
+    <ReactMarkdown>{message.text}</ReactMarkdown>
   )
 }
 
