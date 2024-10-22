@@ -18,8 +18,9 @@ import AddIcon from '@mui/icons-material/Add';
 import { addChat } from "../firebase/Database";
 import useAuth from "../firebase/useAuth";
 import { Timestamp } from "firebase/firestore";
+import moment from "moment";
 
-function HomeDrawer({ open, handleDrawerClose }) {
+function HomeDrawer({ open, handleDrawerClose, chats, setSelectedChat }) {
   const theme = useTheme();
   const { user } = useAuth();
 
@@ -65,13 +66,24 @@ function HomeDrawer({ open, handleDrawerClose }) {
       </HomeDrawerHeader>
       <Divider />
       <List>
-        {["Hello, world", "OpenAI API", "React Application", "How to cook eggs"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton sx={{borderRadius: "16px", mx: 1, py: 0.5}}>
-              <ListItemText primary={text} />
-            </ListItemButton>
+        {/* Ensure chats is mapped correctly */}
+        {chats.length > 0 ? (
+          chats.map((chat) => (
+            <ListItem key={chat.id} disablePadding>
+              <ListItemButton
+                sx={{ borderRadius: "16px", mx: 1, py: 0.5 }}
+                onClick={() => setSelectedChat(chat)}
+              >
+                {/* Render chat title */}
+                <ListItemText primary={moment(chat.title.toDate()).format("DD MMMM YYYY") || "Untitled Chat"} />
+              </ListItemButton>
+            </ListItem>
+          ))
+        ) : (
+          <ListItem>
+            <ListItemText primary="No chats available" />
           </ListItem>
-        ))}
+        )}
       </List>
     </Drawer>
   );

@@ -45,15 +45,20 @@ function HomeMainContent({ open }) {
         return; // Ignore empty input
       }
 
+      // Add user message to database
+
       const encodeInput = encodeURIComponent(input);
       const response = await axios.get(
         `https://p37ydcmuafkhbmbmmck2x4cawm0bmxpz.lambda-url.us-east-1.on.aws/?query=${input}`
       );
       setResponse(response.data);
+
+      // Add AI respose to database
     } catch (error) {
       console.error("CORS Error or another issue:", error);
     }
   };
+
   return (
     <Main open={open}>
       <HomeDrawerHeader />

@@ -5,7 +5,9 @@ import {
   onSnapshot,
   updateDoc,
   doc,
-  deleteDoc
+  deleteDoc,
+  query,
+  where
 } from "firebase/firestore";
 
 // Create new chat in firestore
@@ -18,17 +20,20 @@ export const addChat = async (chat) => {
   }
 };
 
-// Read chats from Firestore in real-time using onSnapshot
-export const subscribeToChats = (callback) => {
+// Read chats from Firestore in real-time using onSnapshot, filtered by uid
+export const subscribeToChats = (uid, callback) => {
   const chatsCollectionRef = collection(db, "Chats");
 
-  // Use onSnapshot to listen for updates in real time
-  return onSnapshot(chatsCollectionRef, (snapshot) => {
+  // Create a query to filter chats by the user's uid
+  const chatsQuery = query(chatsCollectionRef, where("uid", "==", uid));
+
+  // Use onSnapshot to listen for updates in real-time for the filtered chats
+  return onSnapshot(chatsQuery, (snapshot) => {
     const chats = snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
-    callback(chats); // Invoke the callback with the chats data
+    callback(chats); // Invoke the callback with the filtered chats data
   });
 };
 
