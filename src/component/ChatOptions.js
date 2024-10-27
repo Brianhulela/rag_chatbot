@@ -7,16 +7,24 @@ import IconButton from '@mui/material/IconButton';
 import { ListItemIcon, ListItemText } from '@mui/material';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import { deleteChat } from '../firebase/Database';
 
-export default function ChatOptions() {
+export default function ChatOptions({chat}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleDelete = () => {
+    deleteChat(chat.id);
+    handleClose();
+  }
 
   return (
     <div>
@@ -38,7 +46,7 @@ export default function ChatOptions() {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleDelete}>
           <ListItemIcon>
             <DeleteRoundedIcon color='error' fontSize="small" />
           </ListItemIcon>

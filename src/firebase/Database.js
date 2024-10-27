@@ -8,7 +8,9 @@ import {
   deleteDoc,
   query,
   where,
-  orderBy
+  orderBy,
+  writeBatch,
+  getDocs,
 } from "firebase/firestore";
 
 // Create new chat in firestore
@@ -49,15 +51,30 @@ export const updateChat = async (chatId, updatedFields) => {
     }
 };
 
-// Delete a chat document from Firestore
+// Delete a chat document from Firestore and all associated messages
 export const deleteChat = async (chatId) => {
-    try {
-        const chatRef = doc(db, "Chats", chatId); // Reference to the specific document
-        await deleteDoc(chatRef); // Delete the document
-        console.log("Document deleted with ID: ", chatId);
-    } catch (e) {
-        console.error("Error deleting document: ", e);
-    }
+  try {
+      const batch = writeBatch(db); // Initialize a batch operation
+
+      // Step 1: Delete messages associated with the chatId
+      const messagesRef = collection(db, "Messages");
+      const q = query(messagesRef, where("chatId", "==", chatId));
+      const querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach((doc) => {
+          batch.delete(doc.ref); // Add each message to the batch for deletion
+      });
+
+      // Step 2: Delete the chat document
+      const chatRef = doc(db, "Chats", chatId); // Reference to the specific chat document
+      batch.delete(chatRef); // Add the chat document to the batch for deletion
+
+      // Commit the batch
+      await batch.commit();
+      console.log("Document deleted with ID: ", chatId);
+  } catch (e) {
+      console.error("Error deleting document: ", e);
+  }
 };
 
 // Add message to messages collection in Firestore (Create)

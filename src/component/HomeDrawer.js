@@ -77,7 +77,7 @@ function HomeDrawer({ open, handleDrawerClose, chats, setSelectedChat }) {
               >
                 {/* Render chat title */}
                 <ListItemText primary={moment(chat.title.toDate()).format("DD MMMM YYYY") || "Untitled Chat"} />
-                <ChatOptions/>
+                <ChatOptions chat={chat}/>
               </ListItemButton>
             </ListItem>
           ))
