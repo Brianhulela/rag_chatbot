@@ -6,8 +6,8 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import IconButton from '@mui/material/IconButton';
 import { ListItemIcon, ListItemText } from '@mui/material';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
-import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import { deleteChat } from '../firebase/Database';
+import TitleUpdateDialog from './TitleUpdateDialog';
 
 export default function ChatOptions({chat}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -53,12 +53,7 @@ export default function ChatOptions({chat}) {
           <ListItemText>Delete</ListItemText>
         </MenuItem>
 
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <EditRoundedIcon color='warning' fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>Update Title</ListItemText>
-        </MenuItem>
+        <TitleUpdateDialog chat={chat}/>
       </Menu>
     </div>
   );
