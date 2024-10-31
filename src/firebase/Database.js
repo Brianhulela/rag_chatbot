@@ -56,15 +56,6 @@ export const deleteChat = async (chatId) => {
   try {
       const batch = writeBatch(db); // Initialize a batch operation
 
-      // Step 1: Delete messages associated with the chatId
-      const messagesRef = collection(db, "Messages");
-      const q = query(messagesRef, where("chatId", "==", chatId));
-      const querySnapshot = await getDocs(q);
-
-      querySnapshot.forEach((doc) => {
-          batch.delete(doc.ref); // Add each message to the batch for deletion
-      });
-
       // Step 2: Delete the chat document
       const chatRef = doc(db, "Chats", chatId); // Reference to the specific chat document
       batch.delete(chatRef); // Add the chat document to the batch for deletion
