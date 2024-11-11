@@ -19,6 +19,7 @@ import { addChat } from "../firebase/Database";
 import useAuth from "../firebase/useAuth";
 import { Timestamp } from "firebase/firestore";
 import moment from "moment";
+import ChatOptions from "./ChatOptions";
 
 function HomeDrawer({ open, handleDrawerClose, chats, setSelectedChat }) {
   const theme = useTheme();
@@ -75,7 +76,8 @@ function HomeDrawer({ open, handleDrawerClose, chats, setSelectedChat }) {
                 onClick={() => setSelectedChat(chat)}
               >
                 {/* Render chat title */}
-                <ListItemText primary={moment(chat.title.toDate()).format("DD MMMM YYYY") || "Untitled Chat"} />
+                <ListItemText primary={chat.title.toString()} />
+                <ChatOptions chat={chat}/>
               </ListItemButton>
             </ListItem>
           ))

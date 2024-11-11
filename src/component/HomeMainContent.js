@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Container } from "@mui/material";
 import HomeDrawerHeader from "./HomeDrawerHeader";
 import { styled } from "@mui/material/styles";
@@ -40,6 +40,18 @@ function HomeMainContent({ open, selectedChat }) {
   const [messages, setMessages] = useState([]);
   const { user } = useAuth();
 
+  const [streamedResponse, setStreamedResponse] = useState("");
+
+  const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [streamedResponse]);
+  
+
+
   useEffect(() => {
     if (user && selectedChat) {
       const unsubscribe = subscribeToMessages(selectedChat.id, (messages) => {
@@ -49,53 +61,74 @@ function HomeMainContent({ open, selectedChat }) {
     }
   }, [user, selectedChat]);
 
-  const sendUserQuery = async (input) => {
+  const streamAIResponse = async (input) => {
+    let accumulatedData = "";
+
     try {
       if (input.trim() === "") {
         return; // Ignore empty input
       }
 
-      if (user && selectedChat){
+      if (user && selectedChat) {
         // Add user message to database
         const userMessage = {
           chatId: selectedChat.id,
           uid: user.uid,
           text: input,
           createdAt: Timestamp.now(),
-          sender: "USER"
-        }
+          sender: "USER",
+        };
 
         addMessage(userMessage);
 
-        const encodeInput = encodeURIComponent(input);
-        const response = await axios.get(
-          `https://p37ydcmuafkhbmbmmck2x4cawm0bmxpz.lambda-url.us-east-1.on.aws/?query=${input}`
+        // Encode the query to ensure special characters are correctly interpreted
+        const encodedQuery = encodeURIComponent(input);
+
+        const CHAT_API_ENDPOINT =
+          "https://xxmhk4kkfygvtafudhviiy7ol40gwkuq.lambda-url.us-east-1.on.aws/";
+
+        const response = await fetch(
+          `${CHAT_API_ENDPOINT}?query=${encodedQuery}`
         );
-        setResponse(response.data);
 
-        const aiMessage = {
-          chatId: selectedChat.id,
-          uid: user.uid,
-          text: response.data,
-          createdAt: Timestamp.now(),
-          sender: "AI"
+        const reader = response.body.getReader();
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) {
+            const aiMessage = {
+              chatId: selectedChat.id,
+              uid: user.uid,
+              text: accumulatedData,
+              createdAt: Timestamp.now(),
+              sender: "AI",
+            };
+
+            addMessage(aiMessage);
+
+            // Set the streamed response to empty string
+            setStreamedResponse("");
+            break;
+          }
+
+          const decodedChunk = new TextDecoder().decode(value);
+          accumulatedData += decodedChunk;
+
+          setStreamedResponse((prevData) => prevData + decodedChunk);
         }
-
-        addMessage(aiMessage);
       }
-
-      // Add AI respose to database
     } catch (error) {
-      console.error("CORS Error or another issue:", error);
+      console.error("Error invoking Lambda function:", error);
     }
   };
 
   return (
     <Main open={open}>
       <HomeDrawerHeader />
-      <Container maxWidth="md" sx={{height: "100%", alignItems: "flex-end"}}>
-        <Messages messages={messages} response={response}/>
-        <QueryInput open={open} sendUserQuery={sendUserQuery}/>
+      <Container maxWidth="md" sx={{ height: "100%", alignItems: "flex-end" }}>
+        <Messages messages={messages} response={response} streamedResponse={streamedResponse} />
+        <div ref={messagesEndRef} />
+        <QueryInput open={open} sendUserQuery={streamAIResponse} />
       </Container>
     </Main>
   );
