@@ -4,14 +4,12 @@ import { drawerWidth } from "../constants/DrawerConstants";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import { useTheme } from "@emotion/react";
 
-function QueryInput({ open, sendUserQuery }) {
-  const [input, setInput] = useState("");
+function QueryInput({ open, sendUserQuery, input, setInput }) {
   const theme = useTheme();
 
   const handleSend = () => {
     // Handle send logic here
-    sendUserQuery(input);
-    setInput(""); // Clear input after send
+    sendUserQuery();
   };
 
   return (
