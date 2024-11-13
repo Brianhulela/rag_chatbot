@@ -152,7 +152,6 @@ function HomeMainContent({ chats, open, selectedChat, setSelectedChat }) {
         if (selectedChat) {
           handleConversation();
         } else {
-          // TODO
           // Create a new chat
           const chatId = await handleAddChat();
           setNewChatId(chatId);
