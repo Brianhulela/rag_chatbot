@@ -42,7 +42,7 @@ function HomeMainContent({ chats, open, selectedChat, setSelectedChat }) {
 
   const [newChatId, setNewChatId] = useState(null);
 
-  const [streamedResponse, setStreamedResponse] = useState("");
+  const [streamedResponse, setStreamedResponse] = useState(null);
 
   const [input, setInput] = useState("");
 
@@ -91,6 +91,7 @@ function HomeMainContent({ chats, open, selectedChat, setSelectedChat }) {
   };
 
   const handleConversation = async () => {
+    setStreamedResponse("");
     let accumulatedData = "";
 
     // Add user message to database
@@ -130,7 +131,7 @@ function HomeMainContent({ chats, open, selectedChat, setSelectedChat }) {
         addMessage(aiMessage);
 
         // Set the streamed response to empty string
-        setStreamedResponse("");
+        setStreamedResponse(null);
         break;
       }
 

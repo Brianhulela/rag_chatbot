@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import React from 'react'
 import Query from './Query'
 import Response from './Response'
@@ -15,7 +15,9 @@ function Messages({response, messages, streamedResponse}) {
             }
         })}
 
-        {streamedResponse.length > 0 && <Response message={{text: streamedResponse, sender: "AI"}}/>}
+        {streamedResponse?.length == 0 ? 
+        <Typography variant="body1" color='secondary'>Generating...</Typography> :
+        <Response message={{text: streamedResponse, sender: "AI"}}/>}
     </Box>
   )
 }
