@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import {
   Typography,
   Toolbar,
@@ -15,6 +15,8 @@ import { styled } from "@mui/material/styles";
 import { drawerWidth } from "../constants/DrawerConstants";
 import ThemeSwitch from "./ThemeSwitch";
 import useAuth from "../firebase/useAuth";
+import { signOut } from "firebase/auth"; // Import the signOut function
+import { auth } from "../firebaseConfig";
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -38,18 +40,17 @@ const AppBar = styled(MuiAppBar, {
   ],
 }));
 
-const settings = ["Account", "Logout"];
+const settings = ["Account", "Sign Out"];
 
 function HomeAppBar({ open, handleDrawerOpen }) {
+  const { user } = useAuth();
 
-  const {user} = useAuth();
-
-  const [displayName, setDisplayName] = useState("")
+  const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [photoURL, setPhotoURL] = useState("");
 
   useEffect(() => {
-    if(user){
+    if (user) {
       setDisplayName(user.displayName);
       setEmail(user.email);
       setPhotoURL(user.photoURL);
@@ -73,13 +74,19 @@ function HomeAppBar({ open, handleDrawerOpen }) {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth); // This signs the user out
+      console.log("User successfully signed out");
+      handleCloseUserMenu();
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+
   return (
-    <AppBar
-      position="fixed"
-      elevation={0}
-      open={open}
-      color="background"
-    >
+    <AppBar position="fixed" elevation={0} open={open} color="background">
       <Toolbar>
         <IconButton
           color="inherit"
@@ -132,7 +139,14 @@ function HomeAppBar({ open, handleDrawerOpen }) {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <MenuItem
+                    key={setting}
+                    onClick={
+                      setting == "Sign Out"
+                        ? handleSignOut
+                        : handleCloseUserMenu
+                    }
+                  >
                     <Typography sx={{ textAlign: "center" }}>
                       {setting}
                     </Typography>

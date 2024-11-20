@@ -10,7 +10,6 @@ import {
 import GoogleIcon from "@mui/icons-material/Google";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../firebaseConfig";
-import { signOut } from "firebase/auth"; // Import the signOut function
 import { signInWithEmailAndPassword } from "firebase/auth";
 import useAuth from "../firebase/useAuth";
 import { useNavigate } from "react-router-dom";
@@ -40,15 +39,6 @@ function SignIn() {
     }
   };
 
-  const handleSignOut = async () => {
-    try {
-      await signOut(auth); // This signs the user out
-      console.log("User successfully signed out");
-    } catch (error) {
-      console.error("Error signing out:", error);
-    }
-  };
-
   return (
     <Container
       maxWidth="xs"
@@ -60,12 +50,6 @@ function SignIn() {
         height: "100vh",
       }}
     >
-        <Typography variant="body1">Signed in as: {user && user.email}</Typography>
-      <Avatar
-        alt={user?.email && user.email}
-        src={user?.photoURL && user.photoURL}
-        sx={{ width: 24, height: 24 }}
-      />
       <Typography variant="h4">Sign In</Typography>
       <TextField
         value={email}
@@ -98,9 +82,6 @@ function SignIn() {
         <GoogleIcon sx={{ mr: 1 }} />
         Continue with Google
       </Fab>
-      <Button variant="outlined" onClick={handleSignOut}>
-        Sign Out
-      </Button>
     </Container>
   );
 }
