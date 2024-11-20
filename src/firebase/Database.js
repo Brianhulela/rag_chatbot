@@ -5,18 +5,23 @@ import {
   onSnapshot,
   updateDoc,
   doc,
-  deleteDoc,
   query,
   where,
   orderBy,
   writeBatch,
-  getDocs,
 } from "firebase/firestore";
 
 // Create new chat in firestore
 export const addChat = async (chat) => {
   try {
-    const docRef = await addDoc(collection(db, "Chats"), chat);
+    // Add the user UID to the chat object
+    const chatWithUid = {
+      ...chat,
+      uid: chat.uid,  // Attach the authenticated user's UID to the chat object
+    };
+
+    // Add the chat document to the Firestore collection
+    const docRef = await addDoc(collection(db, "Chats"), chatWithUid);
     console.log("Document written with ID: ", docRef.id);
     return docRef.id;
   } catch (e) {
