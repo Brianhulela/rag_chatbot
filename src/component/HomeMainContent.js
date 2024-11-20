@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Container } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import HomeDrawerHeader from "./HomeDrawerHeader";
 import { styled } from "@mui/material/styles";
 import { drawerWidth } from "../constants/DrawerConstants";
@@ -65,7 +65,7 @@ function HomeMainContent({ chats, open, selectedChat, setSelectedChat }) {
 
   useEffect(() => {
     if (selectedChat && newChatId) {
-      handleConversation()
+      handleConversation();
     }
     setNewChatId(null);
   }, [selectedChat]);
@@ -74,7 +74,7 @@ function HomeMainContent({ chats, open, selectedChat, setSelectedChat }) {
     if (newChatId) {
       // Get chat by id from chats array
       const chat = chats.find((chat) => chat.id === newChatId);
-      setSelectedChat(chat); 
+      setSelectedChat(chat);
     }
   }, [chats, newChatId]);
 
@@ -103,7 +103,6 @@ function HomeMainContent({ chats, open, selectedChat, setSelectedChat }) {
     };
 
     addMessage(userMessage);
-
 
     // Encode the query to ensure special characters are correctly interpreted
     const encodedQuery = encodeURIComponent(input);
@@ -166,11 +165,25 @@ function HomeMainContent({ chats, open, selectedChat, setSelectedChat }) {
     <Main open={open}>
       <HomeDrawerHeader />
       <Container maxWidth="md" sx={{ height: "100%", alignItems: "flex-end" }}>
-        <Messages
-          messages={messages}
-          response={response}
-          streamedResponse={streamedResponse}
-        />
+        {selectedChat ? (
+          <Messages
+            messages={messages}
+            response={response}
+            streamedResponse={streamedResponse}
+          />
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              height: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography variant="h4">What can I help with?</Typography>
+          </Box>
+        )}
+
         <div ref={messagesEndRef} />
         <QueryInput
           open={open}
