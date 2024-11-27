@@ -1,5 +1,7 @@
 # Retrieval Augmented Generation Chatbot  
 
+![Design](https://github.com/Brianhulela/rag_chatbot/blob/master/images/chatbot_plan.jpg)
+
 In this project, we’ll build a web application that mimics the functionality of ChatGPT, integrating Firebase, AWS, React, and OpenAI’s GPT-4 model to create a powerful, scalable chatbot solution. The system is highly customizable and can be adapted for various use cases, such as content creation, sentiment analysis, education, and more.  
 
 ---
